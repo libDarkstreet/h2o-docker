@@ -18,11 +18,10 @@ RUN addgroup h2o \
     && adduser -G h2o -D h2o
 
 RUN apk update
-RUN apk add --no-cache ca-certificates openssl openssl-dev
+RUN apk add --no-cache ca-certificates openssl openssl-dev perl
 RUN chown h2o:h2o /h2o
-
-COPY --from=builder /h2o/h2o /h2o
 RUN mkdir /usr/local/share/h2o
-COPY --from=builder /usr/local/share/h2o/ca-bundle.crt /usr/local/share/h2o/ca-bundle.crt
+COPY --from=builder /h2o/h2o /h2o
+COPY --from=builder /usr/local/share/h2o/* /usr/local/share/h2o
 
 CMD /h2o/h2o --conf /config/h2o.conf
