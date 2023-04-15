@@ -1,22 +1,20 @@
-FROM alpine:latest as builder
+FROM alpine:3.14 as builder
 
 ARG VER
 
 WORKDIR /h2o
 
 RUN apk update
-RUN apk add --no-cache git libstdc++ build-base ruby ruby-dev bison make cmake ca-certificates openssl-dev libc-dev linux-headers zlib-dev
+RUN apk add --no-cache git libstdc++ build-base ruby ruby-dev bison make cmake ca-certificates openssl-dev libc-dev linux-headers zlib-dev ruby-rake perl-dev
 RUN update-ca-certificates
 
 RUN git clone --depth 1 --branch $VER https://github.com/h2o/h2o.git .
 
-# RUN cmake -DWITH_MRUBY=on -DWITH_BUNDLED_SSL=on
-# Mruby build currently broken.
+RUN cmake -DWITH_MRUBY=on -DWITH_BUNDLED_SSL=on
 
-RUN cmake -DWITH_MRUBY=off .
 RUN make -j 4 install
 
-FROM alpine:latest as prod
+FROM alpine:3.14 as prod
 WORKDIR /h2o
 
 RUN addgroup h2o && adduser -G h2o -D h2o
