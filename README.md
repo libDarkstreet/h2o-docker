@@ -8,28 +8,28 @@ All configurations must be mounted to `/config`.
 
 # Building
 
-Latest: `docker buildx build -f Dockerfile.latest --tag h2o-docker:latest --platform linux/arm/v7,linux/arm64/v8,linux/amd64 .`
+Dev: `docker buildx build -f Dockerfile.dev --tag h2o-docker:latest --platform linux/arm/v7,linux/arm64/v8,linux/amd64 .`
 
 Releases: `docker buildx build --tag h2o-docker:v2.2.6 --build-arg VER=v2.2.6 --platform linux/arm/v7,linux/arm64/v8,linux/amd64 .`
 
 # Example
 
-`docker run -v ./h2o.conf:/config/h2o.conf --name h2o -p 8080:80 -it -d darkstreet00/h2o-docker`
+`docker run --name h2o -p 8080:80 -it -d darkstreet00/h2o-docker:dev`
 
 Example config:
 
-```
-server-name: h2o
-listen:
-  port: 80
+```yml
 user: h2o
 hosts:
-  "test.local":
+  "*:80":
     listen:
       port: 80
     paths:
       "/":
-        redirect: https://google.com
+        mruby.handler: |
+          Proc.new do |env|
+            [200, {'content-type' => 'text/html; charset=utf-8'}, ['<body style="background-color:#333366"><h1 style="text-align:center; color:rgb(255, 255, 255)">It Works!</h1></body>']]
+          end
 
 access-log: /h2o/access-log
 error-log: /h2o/error-log
