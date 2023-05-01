@@ -11,7 +11,7 @@ RUN gem install rake
 RUN git clone https://github.com/h2o/h2o.git .
 RUN cmake -DWITH_MRUBY=on -DWITH_BUNDLED_SSL=on
 
-RUN make -j 4 install
+RUN make -j 16 install
 
 FROM alpine:3.14 as prod
 WORKDIR /h2o
