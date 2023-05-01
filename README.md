@@ -8,9 +8,9 @@ All configurations must be mounted to `/config`.
 
 # Building
 
-Dev: `docker buildx build -f Dockerfile.dev --tag h2o-docker:latest --platform linux/arm/v7,linux/arm64/v8,linux/amd64 .`
+Dev: `docker build -f Dockerfile.dev -t h2o-docker:dev .`
 
-Releases: `docker buildx build --tag h2o-docker:v2.2.6 --build-arg VER=v2.2.6 --platform linux/arm/v7,linux/arm64/v8,linux/amd64 .`
+Releases: `docker build -f Dockerfile -t h2o-docker:v2.2.6 --build-arg VER=v2.2.6 .`
 
 # Example
 
